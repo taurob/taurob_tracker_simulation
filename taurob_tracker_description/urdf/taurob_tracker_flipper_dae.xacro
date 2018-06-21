@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<!--<robot name="taurob_tracker" xmlns:xacro="http://www.ros.org/wiki/xacro">-->
+<robot name="example" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <arg name="laser_rot" default="0.0" />
+
+    <!-- Constants for robot dimensions -->
+    <xacro:property name="M_PI" value ="3.1415926535897931" />
+    <xacro:property name="tracker_base_size_x" value="1.0" />
+    <xacro:property name="tracker_base_size_y" value="0.5" />
+    <xacro:property name="tracker_base_size_z" value="0.2 " />
+
+    <xacro:property name="tracker_mass" value="30.0 " />
+  
+    <xacro:property name="tracker_base_offset_x" value="-0.122" />
+    <xacro:property name="tracker_base_offset_z" value="-0.08" />
+
+    <xacro:property name="flipper_endpoint_x" value="0.45" />
+    <xacro:property name="flipper_offset_x" value="-0.051" />
+    <xacro:property name="flipper_upper_shortening_x" value="0.05" />
+    <xacro:property name="flipper_mass" value="2.0" />
+
+    <!-- width overall is 0.58 ->  (0.58 - 0.0925)/2 = 0.24375 -->
+    <xacro:property name="track_offset_y" value="0.24375" />
+    <!--Below pending clarification-->
+    <xacro:property name="track_offset_z" value="-0.09" />
+  
+    <xacro:property name="track_wheel_radius" value="0.13" />
+    <xacro:property name="track_width" value="0.0925" />
+
+    <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+    <xacro:include filename="$(find taurob_tracker_description)/urdf/taurob_tracker.gazebo" />
+    <!-- Import Camera macro -->
+    <xacro:include filename="$(find taurob_tracker_description)/urdf/taurob_camera.xacro" />
+    <!-- Import Gazebo modules for the camera -->
+    <xacro:include filename="$(find taurob_tracker_description)/urdf/taurob_camera.gazebo" />
+    <!-- Import Laser scanner macro -->
+    <xacro:include filename="$(find taurob_tracker_description)/urdf/taurob_laser_scanner.xacro" />
+    <!-- Import Gazebo modules for the laser scanner -->
+    <xacro:include filename="$(find taurob_tracker_description)/urdf/taurob_laser_scanner.gazebo" />
+    <!-- Import Rviz colors -->
+    <xacro:include filename="$(find taurob_tracker_description)/urdf/materials.xacro" />
+    <!-- Import Hector macros for inertia calculation -->
+    <xacro:include filename="$(find hector_xacro_tools)/urdf/inertia_tensors.urdf.xacro" />
+    
+    <link name="base_link"/>
+   
+    <joint name="chassis_joint" type="fixed">
+      <origin xyz="${-tracker_base_offset_x} 0 0.193" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="chassis_link"/>
+    </joint>
+
+    <!-- Chassis Link -->
+    <link name="chassis_link">
+        <xacro:inertial_cuboid_with_pose mass="${tracker_mass}" x_length="${tracker_base_size_x*0.66}" y_length="${tracker_base_size_y}" z_length="${tracker_base_size_z}" >
+            <origin xyz="${-tracker_base_size_x*0.25} 0.0 ${-tracker_base_size_z*0.5}" rpy="0 0 0" />
+        </xacro:inertial_cuboid_with_pose>
+
+        <!-- Body -->
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://taurob_tracker_description/meshes/tracker_chassis_no_tracks.dae"/>
+            </geometry>
+            <material name="white" />
+        </visual>
+      
+        <collision>
+            <origin xyz="${tracker_base_offset_x-0.13} 0.0 ${tracker_base_offset_z+0.005}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${tracker_base_size_x-0.3} ${tracker_base_size_y - track_width} ${tracker_base_size_z}"/>
+            </geometry>
+        </collision>
+        <!-- Fake Wheels -->
+        <collision>
+            <origin xyz="0 ${track_offset_y} ${track_offset_z}" rpy="${M_PI/2} 0 0"/>
+            <geometry>
+                <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
+            </geometry>
+        </collision>
+        <collision>
+            <origin xyz="0 -${track_offset_y} ${track_offset_z}" rpy="${M_PI/2} 0 0"/>
+            <geometry>
+              <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
+            </geometry>
+        </collision>
+         <collision>
+            <origin xyz="${-tracker_base_size_x*0.5} ${track_offset_y} ${track_offset_z}" rpy="${M_PI/2} 0 0"/>
+            <geometry>
+              <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
+            </geometry>
+          </collision>
+        <collision>
+            <origin xyz="${-tracker_base_size_x*0.5} -${track_offset_y} ${track_offset_z}" rpy="${M_PI/2} 0 0"/>
+            <geometry>
+              <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- Flipper front link -->
+    <link name="flipper_link_front">
+        <xacro:inertial_cuboid_with_pose mass="${flipper_mass}" x_length="${tracker_base_size_x*0.5}" y_length="${track_width*2}" z_length="0.17651" >
+          <origin xyz="${-tracker_base_offset_x} 0.0 0.0" rpy="0 0 0" />
+        </xacro:inertial_cuboid_with_pose>    
+        <origin xyz="0 0 0" rpy="0 0 0" />
+
+        <!-- Left side -->
+        <collision name="flipper_left" >
+          <origin xyz="${flipper_endpoint_x} ${track_offset_y} 0" rpy="-${M_PI * 0.5} 0.0 0.0" />
+          <geometry>
+            <cylinder length="${track_width}" radius="${track_wheel_radius}" />
+          </geometry>
+        </collision>
+        <visual name="flipper_left" >
+          <origin xyz="${-tracker_base_offset_x-flipper_offset_x} 0 ${-track_offset_z}" rpy="0 0 -${M_PI * 0.5}" />        
+          <geometry>
+            <mesh filename="package://taurob_tracker_description/meshes/flipper_left.dae" scale="0.01 0.01 0.01" />
+          </geometry>
+        </visual>
+
+        <!-- Right side -->
+        <collision name="flipper_right" >
+          <origin xyz="${flipper_endpoint_x} -${track_offset_y} 0" rpy="-${M_PI * 0.5} 0.0 0.0" />
+          <geometry>
+            <cylinder length="${track_width}" radius="${track_wheel_radius}" />
+          </geometry>
+         </collision>
+        <visual name="flipper_right" >
+          <origin xyz="${-tracker_base_offset_x-flipper_offset_x} 0 ${-track_offset_z}" rpy="0 0 -${M_PI * 0.5}" />        
+          <geometry>
+            <mesh filename="package://taurob_tracker_description/meshes/flipper_right.dae" scale="0.01 0.01 0.01" />
+          </geometry>
+        </visual>
+    </link> 
+
+    <!-- Flipper front joint -->
+    <joint name="flipper_joint_front" type="revolute">
+        <origin xyz="${tracker_base_offset_x-flipper_offset_x} 0 ${track_offset_z}" rpy="0 0 0" />
+        <axis xyz="0 -1 0"/>
+      
+        <limit lower="${-50 * M_PI / 180}" upper="${30 * M_PI / 180}" effort="10000" velocity="${1.0 * 30 * M_PI / 180}" />
+      
+        <parent link="chassis_link"/>
+        <child link="flipper_link_front"/>
+    </joint>
+
+    <!-- Flipper back -->
+    <link name="flipper_link_back">
+        <xacro:inertial_cuboid_with_pose mass="${flipper_mass}" x_length="${tracker_base_size_x*0.25}" y_length="${track_width*2}" z_length="0.17651" >
+            <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+        </xacro:inertial_cuboid_with_pose>    
+        <origin xyz="0 0 0" rpy="0 0 0" />
+
+        <!-- Wheel back -->
+        <visual>
+            <origin xyz="0 ${track_offset_y} 0.0" rpy="${M_PI/2} 0 0"/>
+            <geometry>
+                <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
+            </geometry>
+            <material name="black" />
+        </visual>
+        <visual>
+            <origin xyz="0 -${track_offset_y} 0.0" rpy="${M_PI/2} 0 0"/>
+            <geometry>
+                <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
+            </geometry>
+            <material name="black" />
+        </visual>
+
+    </link>
+
+    <joint name="flipper_joint_back" type="revolute">
+      <origin xyz="${tracker_base_offset_x-(tracker_base_size_x*0.5-track_wheel_radius)} 0 ${track_offset_z}" rpy="0 0 0" />
+      <axis xyz="0 -1 0"/>
+      <mimic joint="flipper_joint_front" multiplier="0.5"/>
+      
+      <limit lower="${-170 * M_PI / 180}" upper="${180 * M_PI / 180}"
+             effort="10000" velocity="${10.0 * 360 * M_PI / 180}" />
+      <parent link="chassis_link"/>
+      <child link="flipper_link_back"/>
+    </joint>
+
+    
+<!-- Accessories -->
+    <!-- Cameras -->
+    <xacro:taurob_camera suffix="front" parent="chassis_link">
+      <origin xyz="0.11 0.0 ${-tracker_base_size_z*0.5}" rpy="0 0 0" />
+    </xacro:taurob_camera>
+    <xacro:taurob_camera_gazebo link_name="camera_link_front" camera_name="camera_front" rtsp_support="false" />
+    <xacro:taurob_camera suffix="back" parent="chassis_link">
+      <origin xyz="-0.6 0.0 ${-tracker_base_size_z*0.5}" rpy="0 0 0" />
+    </xacro:taurob_camera>
+    <xacro:taurob_camera_gazebo link_name="camera_link_back" camera_name="camera_back" rtsp_support="false"/>
+
+    <!-- Laser scanner -->
+    <xacro:taurob_laser_scanner_mount suffix="front" parent="chassis_link">
+        <origin xyz="0.1 0.0 0.05" rpy="0 0 0" />
+    </xacro:taurob_laser_scanner_mount>
+
+    <xacro:taurob_laser_scanner suffix="front" parent="laser_scanner_mount_link_front">
+        <origin xyz="0.0 0.0 0.0" rpy="0 $(arg laser_rot) 0" />
+    </xacro:taurob_laser_scanner>
+
+    <!-- IMU -->
+    <link name="imu_link" />
+    <joint name="imu_joint" type="fixed">
+      <origin xyz="0 0 ${track_offset_z}" rpy="0 0 0" />
+      <parent link="chassis_link"/>
+      <child link="imu_link"/>
+    </joint>
+
+<!-- Transmissions -->
+    <transmission name="trans_flipper_front">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_joint_front">
+            <!--<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>-->
+	    <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_motor_front">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    <transmission name="trans_flipper_back">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="flipper_joint_back">
+            <!--<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>-->
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="flipper_motor_back">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+</robot>

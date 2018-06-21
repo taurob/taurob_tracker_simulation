@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" >
+
+  <xacro:macro name="taurob_laser_scanner_mount" params="suffix parent *origin">
+    <link name="laser_scanner_mount_link_${suffix}">
+      <xacro:insert_block name="origin" />       
+      <visual>
+        <origin xyz="-0.05 0.1 -0.05" rpy="0 0 0" />
+        <geometry>
+          <box size="0.1 0.025 0.025" />
+        </geometry>
+        <material name="white" />
+      </visual>
+      <visual>
+        <origin xyz="-0.05 -0.1 -0.05" rpy="0 0 0" />
+        <geometry>
+          <box size="0.1 0.025 0.025" />
+        </geometry>
+        <material name="white" />
+      </visual>
+      <visual>
+        <origin xyz="0 0 -0.05" rpy="0 0 0" />
+        <geometry>
+          <box size="0.025 0.225 0.025" />
+        </geometry>
+        <material name="white" />
+      </visual>
+
+      <collision>
+	      <origin xyz="-0.05 0.1 -0.05" rpy="0 0 0" />
+        <geometry>
+          <box size="0.1 0.025 0.025" />
+        </geometry>
+      </collision>
+      <collision>
+	      <origin xyz="-0.05 -0.1 -0.05" rpy="0 0 0" />
+          <geometry>
+            <box size="0.1 0.025 0.025" />
+          </geometry>
+      </collision>
+      <collision>
+	      <origin xyz="0 0 -0.05" rpy="0 0 0" />
+          <geometry>
+            <box size="0.025 0.225 0.025" />
+          </geometry>
+      </collision>
+    </link>
+
+    <joint name="laser_scanner_mount_${suffix}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <axis xyz="0 0 0"/>      
+      <parent link="${parent}" />
+      <child link="laser_scanner_mount_link_${suffix}" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="taurob_laser_scanner" params="suffix parent *origin">
+    <link name="laser_scanner_link_${suffix}">
+      <xacro:insert_block name="origin" />
+      <visual>
+	      <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://taurob_tracker_description/meshes/hokuyo.dae"/>
+        </geometry>
+        <material name="white" />
+      </visual>
+
+      <collision name="collision-base">
+        <origin xyz="0 0 -0.0145" rpy="0 0 0" />
+        <geometry>
+          <box size="0.05 0.05 0.041" />
+        </geometry>
+      </collision>
+      <collision name="collision-top">
+        <origin xyz="0 0 0.0205" rpy="0 0 0" />
+        <geometry>
+          <cylinder radius="0.021" length="0.029" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="laser_scanner_${suffix}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <axis xyz="0 0 0"/>      
+      <parent link="${parent}" />
+      <child link="laser_scanner_link_${suffix}" />
+    </joint>
+  </xacro:macro>
+
+</robot>

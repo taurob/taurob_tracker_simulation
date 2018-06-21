@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" >
+
+    <xacro:macro name="taurob_camera" params="suffix parent *origin">
+        <link name="camera_link_${suffix}">
+            <xacro:insert_block name="origin" />       
+            <visual>
+                <geometry>
+                    <box size="0.0001 0.125 0.025" />
+                </geometry>
+                <material name="black" />
+            </visual>
+        </link>
+        <joint name="camera_${suffix}_joint" type="fixed">
+            <xacro:insert_block name="origin" />
+	    <axis xyz="0 0 0"/>
+            <parent link="${parent}" />
+            <child link="camera_link_${suffix}" />
+        </joint>
+    </xacro:macro>
+
+</robot>

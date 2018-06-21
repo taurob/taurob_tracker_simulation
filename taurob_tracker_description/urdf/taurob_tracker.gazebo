@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<robot>
+
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control_select_joints" filename="libgazebo_ros_control_select_joints.so">
+      <robotNamespace>/taurob_tracker</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <joint>flipper_joint_front</joint>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="force_based_move_control1" filename="libgazebo_ros_force_based_move.so">
+      <commandTopic>/taurob_tracker/cmd_vel_raw</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odomTEST</odometryFrame>
+      <odometryRate>20.0</odometryRate>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <yaw_velocity_p_gain>250</yaw_velocity_p_gain>
+      <!--<x_velocity_p_gain>500</x_velocity_p_gain>-->
+      <publishOdometryTf>0</publishOdometryTf>
+    </plugin>
+  </gazebo>
+
+
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>/taurob_tracker/imu/data</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>/taurob_tracker/imu/data</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>10.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>base_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+      <alwayson>true</alwayson>
+      <updaterate>1.0</updaterate>
+      <bodyname>imu_link</bodyname>
+      <robotNamespace>/taurob_tracker</robotNamespace>
+      <topicname>/fix</topicname>
+      <velocitytopicname>fix_velocity</velocitytopicname>
+      <drift>5.0 5.0 5.0</drift>
+      <gaussiannoise>0.1 0.1 0.1</gaussiannoise>
+      <velocitydrift>0 0 0</velocitydrift>
+      <velocitygaussiannoise>0.1 0.1 0.1</velocitygaussiannoise>
+
+      <referenceLatitude>48.1360478</referenceLatitude>
+      <referenceLongitude>16.3148094</referenceLongitude>
+      <referenceAltitude>250</referenceAltitude>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="flipper_mimic_control" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+      <robotNamespace>/taurob_tracker</robotNamespace>
+      <joint>flipper_joint_front</joint>
+      <mimicJoint>flipper_joint_back</mimicJoint>
+      <multiplier>0.5</multiplier>
+    </plugin>
+  </gazebo>
+
+  <!-- Chassis link -->
+  <gazebo reference="chassis_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+  <!-- Flipper front link -->
+  <gazebo reference="flipper_link_front">
+    <mu1>200.0</mu1>
+    <mu2>100.0</mu2>
+    <kp>500.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- Flipper back link -->
+  <gazebo reference="flipper_link_back">
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>    
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find taurob_tracker_control)/config/taurob_tracker_control.yaml" command="load"/>
+
+  <!-- load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/taurob_tracker" args="joint_state_controller
+					  joint_flipper_position_controller"/>
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	respawn="false" output="screen">
+    <remap from="/joint_states" to="/taurob_tracker/joint_states" />
+  </node>
+
+  <!-- transformer -->
+  <node name="gps_conv" pkg="gps_common" type="utm_odometry_node">
+    <remap from="odom" to="taurob_tracker/gps_odom"/>
+    <remap from="fix" to="taurob_tracker/fix" />
+  </node>
+
+  <!-- fuse odometry -->
+  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
+    <param name="output_frame" value="odom"/>
+    <param name="base_footprint_frame" value="base_link"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="true"/>
+    <param name="gps_used" value="false"/>
+    <param name="debug" value="false"/>
+    <param name="self_diagnose" value="true"/>
+
+    <remap from="/imu_data" to="/taurob_tracker/imu/data" />
+    <!-- Used to get differential movement -->
+    <remap from="/vo" to="/taurob_tracker/gps_odom" />
+    <!-- Only needed if GPS coordinates should be calculated as absolute coordinates -->
+    <!--<remap from="/gps" to="/taurob_tracker/gps_odom" />-->
+  </node>
+
+</launch>

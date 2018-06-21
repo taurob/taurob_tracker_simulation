@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" >
+
+  <!-- Camera gazebo plugin and sensor -->
+  <xacro:macro name="taurob_camera_gazebo" params="link_name camera_name rtsp_support:=false">
+    <gazebo reference="${link_name}">
+      <material>Gazebo/Black</material>
+      
+      <sensor type="camera" name="${camera_name}">
+        <update_rate>30.0</update_rate>
+        <camera name="${camera_name}">
+          <horizontal_fov>1.3962634</horizontal_fov>
+          <image>
+            <width>800</width>
+            <height>600</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <!-- Noise is sampled independently per pixel on each frame.
+              That pixel's noise value is added to each of its color
+              channels, which at that point lie in the range [0,1]. -->
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+
+        <plugin name="${camera_name}_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>0.0</updateRate>
+          <cameraName>taurob_tracker/${camera_name}</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>${link_name}</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>0.0</distortionK1>
+          <distortionK2>0.0</distortionK2>
+          <distortionK3>0.0</distortionK3>
+          <distortionT1>0.0</distortionT1>
+          <distortionT2>0.0</distortionT2>
+        </plugin>
+
+        <xacro:if value="${rtsp_support}">
+          <plugin name="${camera_name}_rtsp" filename="libgazebo_rtsp_camera.so">
+            <camera_url>${camera_name}</camera_url>
+            <server_port>8854</server_port>
+          </plugin>
+        </xacro:if>
+
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,11 @@
+taurob_tracker:
+    # Publish all joint states -----------------------------------
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 50  
+  
+    # Position Controllers ---------------------------------------
+    joint_flipper_position_controller:
+        type: position_controllers/JointPositionController
+        joint: flipper_joint_front
+        pid: {p: 500.0, i: 10.0, d: 0.0}

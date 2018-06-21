@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <arg name="laser_offset_rot" default="0.0" />
+
+  <!-- Start Gazebo -->
+  <include file="$(find taurob_tracker_gazebo)/launch/taurob_tracker_world.launch" >
+    <arg name="laser_offset_rot" value="$(arg laser_offset_rot)" />
+  </include>
+
+  <!-- Start Controller -->
+  <include file="$(find taurob_tracker_control)/launch/taurob_tracker_control.launch" />
+
+  <!-- Start Rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find taurob_tracker_bringup)/launch/default.rviz"/>
+
+</launch>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Teleop node -->
+  <node name="taurob_teleop_node" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen" >
+    <remap from="/cmd_vel" to="/taurob_tracker/cmd_vel_raw" />
+  </node>
+</launch>
