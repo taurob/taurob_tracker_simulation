@@ -2,9 +2,9 @@
 
 *taurob tracker ROS packages for simulation*
 
- Authors: Clemens Hammer, taurob GmbH
-
-          Lukas Silberbauer, taurob GmbH
+ Authors: 
+ Clemens Hammer, taurob GmbH
+ Lukas Silberbauer, taurob GmbH
 
  Date: 27 June 2018
 
@@ -28,6 +28,7 @@ Redistribution and use in source and binary forms, with or without modification,
 Install the following (assuming you run ROS Kinetic):
 
 sudo apt-get update
+
 sudo apt-get install ros-kinetic-control-toolbox ros-kinetic-controller-manager ros-kinetic-gazebo-ros-control ros-kinetic-hector-xacro-tools ros-kinetic-gps-common ros-kinetic-robot-pose-ekf
 
 ## Compilation and setup
