@@ -2,8 +2,9 @@
 
 *taurob tracker ROS packages for simulation*
 
- Author: Clemens Hammer, taurob GmbH
-         Lukas Silberbauer, taurob GmbH
+ Authors: Clemens Hammer, taurob GmbH
+
+          Lukas Silberbauer, taurob GmbH
 
  Date: 27 June 2018
 
