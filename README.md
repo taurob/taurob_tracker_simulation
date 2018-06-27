@@ -3,8 +3,9 @@
 *taurob tracker ROS packages for simulation*
 
  Author: Clemens Hammer, taurob GmbH
+         Lukas Silberbauer, taurob GmbH
 
- Date: 21 June 2018
+ Date: 27 June 2018
 
 This repository contains packages to simulate a taurob tracker robot base
 
