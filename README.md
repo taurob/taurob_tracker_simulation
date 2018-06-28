@@ -29,7 +29,7 @@ Install the following (assuming you run ROS Kinetic):
 
 sudo apt-get update
 
-sudo apt-get install ros-kinetic-control-toolbox ros-kinetic-controller-manager ros-kinetic-gazebo-ros-control ros-kinetic-hector-xacro-tools ros-kinetic-gps-common ros-kinetic-robot-pose-ekf
+sudo apt-get install ros-kinetic-control-toolbox ros-kinetic-controller-manager ros-kinetic-gazebo-ros-control ros-kinetic-hector-xacro-tools ros-kinetic-gps-common ros-kinetic-robot-pose-ekf ros-kinetic-joint-state-controller ros-kinetic-effort-controllers ros-kinetic-position-controllers
 
 ## Compilation and setup
 
