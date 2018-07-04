@@ -3,12 +3,6 @@
 
   <!-- ros_control plugin -->
   <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/taurob_tracker</robotNamespace>
-    </plugin>
-  </gazebo>
-
-  <gazebo>
     <plugin name="gazebo_ros_control_select_joints" filename="libgazebo_ros_control_select_joints.so">
       <robotNamespace>/taurob_tracker</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
@@ -25,10 +19,9 @@
       <robotBaseFrame>base_link</robotBaseFrame>
       <yaw_velocity_p_gain>250</yaw_velocity_p_gain>
       <!--<x_velocity_p_gain>500</x_velocity_p_gain>-->
-      <publishOdometryTf>1</publishOdometryTf>
+      <publishOdometryTf>0</publishOdometryTf>
     </plugin>
   </gazebo>
-
 
   <gazebo reference="imu_link">
     <gravity>true</gravity>
