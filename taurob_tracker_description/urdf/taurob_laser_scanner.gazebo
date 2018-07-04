@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" > 
   <!-- hokuyo -->
   <gazebo reference="laser_scanner_link_front">
-    <sensor type="gpu_ray" name="head_hokuyo_sensor">
+    <sensor type="ray" name="head_hokuyo_sensor">
       <visualize>false</visualize>
       <update_rate>40</update_rate>
       <ray>
@@ -29,7 +29,7 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="gazebo_hokuyo_laser_controller" filename="libgazebo_ros_gpu_laser.so">
+      <plugin name="gazebo_hokuyo_laser_controller" filename="libgazebo_ros_laser.so">
         <topicName>/taurob_tracker/laser_scan</topicName>
         <frameName>laser_scanner_link_front</frameName>
       </plugin>
