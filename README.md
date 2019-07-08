@@ -48,6 +48,21 @@ To start the simulation execute the following command:
 
 * roslaunch taurob_tracker_bringup bringup.launch
 
+### Running simulation in docker. 
+
+The repository includes a Dockerfile that can be used to quickly build...
+
+```
+sudo docker build -t tracker_simulation .
+```
+
+... and run...
+
+```
+sudo docker run -ti -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix tracker_simulation
+```
+
+... the simulation.
 
 ## Moving the robot
 

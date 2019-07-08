@@ -20,5 +20,53 @@
       </camera>
     </gui>
 
+    <!-- Simple geometries to test the lidar -->
+    <model name="box_1">
+      <pose>2.0 0.0 0.5  0.0 0.0 0.0</pose>
+      <static>true</static>
+
+      <link name="box_1_link">
+        <visual name="box_1_visual">
+          <geometry>
+            <box>
+              <size>1.0 1.0 1.0</size>
+            </box>
+          </geometry>  
+        </visual>
+
+        <collision name="box_1_collision">
+          <geometry>
+            <box>
+              <size>1.0 1.0 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+   </model>
+
+   <model name="box_2">
+      <pose>0.0 2.0 0.5  0.0 0.0 0.0</pose>
+      <static>true</static>
+
+      <link name="box_2_link">
+        <visual name="box_2_visual">
+          <geometry>
+            <box>
+              <size>1.0 1.0 1.0</size>
+            </box>
+          </geometry>  
+        </visual>
+
+        <collision name="box_2_collision">
+          <geometry>
+            <box>
+              <size>1.0 1.0 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+   </model>
+
+
   </world>
 </sdf>
