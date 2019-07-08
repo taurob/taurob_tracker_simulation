@@ -16,8 +16,8 @@
     <xacro:property name="tracker_base_offset_z" value="-0.08" />
 
     <xacro:property name="flipper_endpoint_x" value="0.45" />
-    <xacro:property name="flipper_offset_x" value="-0.051" />
-    <xacro:property name="flipper_upper_shortening_x" value="0.05" />
+    <xacro:property name="flipper_offset_x" value="0.0" />
+    <xacro:property name="flipper_upper_shortening_x" value="0.0" />
     <xacro:property name="flipper_mass" value="2.0" />
 
     <!-- width overall is 0.58 ->  (0.58 - 0.0925)/2 = 0.24375 -->
@@ -59,11 +59,11 @@
 
         <!-- Body -->
         <visual>
-            <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+            <origin xyz="0.0 0.0 0.0" rpy="0 0 ${-1 * M_PI/2}" />
             <geometry>
-                <mesh filename="package://taurob_tracker_description/meshes/tracker_chassis_no_tracks.dae"/>
+                <mesh filename="package://taurob_tracker_description/meshes/tracker_chassis_no_tracks.dae" scale="0.01 0.01 0.01" />
             </geometry>
-            <material name="white" />
+            <!--<material name="white" />-->
         </visual>
       
         <collision>
@@ -116,7 +116,7 @@
         <visual name="flipper_left" >
           <origin xyz="${-tracker_base_offset_x-flipper_offset_x} 0 ${-track_offset_z}" rpy="0 0 -${M_PI * 0.5}" />        
           <geometry>
-            <mesh filename="package://taurob_tracker_description/meshes/flipper_left.dae" scale="0.01 0.01 0.01" />
+            <mesh filename="package://taurob_tracker_description/meshes/flipper_left_forward.dae" scale="0.01 0.01 0.01" />
           </geometry>
         </visual>
 
@@ -130,7 +130,7 @@
         <visual name="flipper_right" >
           <origin xyz="${-tracker_base_offset_x-flipper_offset_x} 0 ${-track_offset_z}" rpy="0 0 -${M_PI * 0.5}" />        
           <geometry>
-            <mesh filename="package://taurob_tracker_description/meshes/flipper_right.dae" scale="0.01 0.01 0.01" />
+            <mesh filename="package://taurob_tracker_description/meshes/flipper_right_forward.dae" scale="0.01 0.01 0.01" />
           </geometry>
         </visual>
     </link> 
@@ -154,21 +154,20 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
 
         <!-- Wheel back -->
+
         <visual>
-            <origin xyz="0 ${track_offset_y} 0.0" rpy="${M_PI/2} 0 0"/>
-            <geometry>
-                <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
-            </geometry>
-            <material name="black" />
-        </visual>
-        <visual>
-            <origin xyz="0 -${track_offset_y} 0.0" rpy="${M_PI/2} 0 0"/>
-            <geometry>
-                <cylinder length="${track_width}" radius="${track_wheel_radius}"/>
-            </geometry>
-            <material name="black" />
+          <origin xyz="${-tracker_base_offset_x+0.38} 0 ${-track_offset_z}" rpy="0 0 -${M_PI * 0.5}" />        
+          <geometry>
+            <mesh filename="package://taurob_tracker_description/meshes/flipper_left_back.dae" scale="0.01 0.01 0.01" />
+          </geometry>
         </visual>
 
+        <visual name="flipper_right" >
+          <origin xyz="${-tracker_base_offset_x+0.38} 0 ${-track_offset_z}" rpy="0 0 -${M_PI * 0.5}" />        
+          <geometry>
+            <mesh filename="package://taurob_tracker_description/meshes/flipper_right_back.dae" scale="0.01 0.01 0.01" />
+          </geometry>
+        </visual>
     </link>
 
     <joint name="flipper_joint_back" type="revolute">

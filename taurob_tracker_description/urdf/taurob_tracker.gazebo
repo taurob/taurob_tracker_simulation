@@ -67,7 +67,7 @@
       <robotNamespace>/taurob_tracker</robotNamespace>
       <joint>flipper_joint_front</joint>
       <mimicJoint>flipper_joint_back</mimicJoint>
-      <multiplier>0.5</multiplier>
+      <multiplier>0.0</multiplier>
     </plugin>
   </gazebo>
 
